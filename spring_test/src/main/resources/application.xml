@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <context:component-scan base-package="com"></context:component-scan>
+    <context:property-placeholder location="classpath:db.properties"></context:property-placeholder>
+<!--    <bean class="com.service.HelloService" name="helloService"></bean>-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="username" value="${jdbc.username}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+        <property name="url" value="${jdbc.url}"></property>
+        <property name="driverClassName" value="${jdbc.driver}"></property>
+    </bean>
+
+    <!--创建jdbcTemplate并指定数据源-->
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <!--创建dao并注入JdbcTemplate-->
+    <bean id="baseDao" class="com.dao.BaseDao">
+        <property name="jdbcTemplate" ref="jdbcTemplate" />
+    </bean>
+
+<!--    <bean class="com.aspect.MyAspect" id="myAspect"></bean>-->
+<!--    <aop:config>-->
+<!--        <aop:pointcut id="myPoint" expression="execution(* com..service.*.*(..))"/>-->
+<!--        <aop:aspect ref="myAspect">-->
+<!--            <aop:before method="before" pointcut-ref="myPoint"></aop:before>-->
+<!--            <aop:around method="around" pointcut-ref="myPoint"></aop:around>-->
+<!--            <aop:after-returning method="afterReturning" pointcut-ref="myPoint"></aop:after-returning>-->
+<!--            <aop:after-throwing method="afterThrowing" pointcut-ref="myPoint"></aop:after-throwing>-->
+<!--            <aop:after method="after" pointcut-ref="myPoint"></aop:after>-->
+<!--        </aop:aspect>-->
+<!--    </aop:config>-->
+
+    <aop:aspectj-autoproxy/>
+</beans>
